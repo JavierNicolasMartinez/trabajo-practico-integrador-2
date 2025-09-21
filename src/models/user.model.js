@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const UserSchema = new Schema(
   {
@@ -49,6 +49,10 @@ const UserSchema = new Schema(
         default: Date.now,
       },
     },
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,
@@ -57,3 +61,9 @@ const UserSchema = new Schema(
 );
 
 export const UserModel = model("User", UserSchema);
+
+// UserModel.pre(/^find/, function (next) {
+//   this.where({ deletedAt: { $eq: null } });
+//   next();
+// });
+//Esta función es para que siempre que use un metodo find solo lleve los que no están eliminados.

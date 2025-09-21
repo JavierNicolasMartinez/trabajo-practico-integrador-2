@@ -7,7 +7,7 @@ export const register = async (req, res) => {
   try {
     const data = matchedData(req, { locations: ["body"] });
     const hashedPassword = await hashPassword(data.password);
-
+    console.log("no llega hasta registrado");
     const user = await UserModel.create({
       username: data.username,
       email: data.email,
@@ -15,6 +15,7 @@ export const register = async (req, res) => {
       role: data.role,
       profile: data.profile,
     });
+    console.log("llega hasta registrado");
     return res.status(201).json({ message: "Usuario registrado exitosamente" });
   } catch (error) {
     console.log(error);
