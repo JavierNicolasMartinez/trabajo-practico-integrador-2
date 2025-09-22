@@ -23,7 +23,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       minLength: 6,
-      select: false,
+      //   select: false,
     },
     role: {
       type: String,
@@ -31,8 +31,8 @@ const UserSchema = new Schema(
       default: "user",
     },
     profile: {
-      firstName: { type: String, minLength: 2, maxLength: 50 },
-      lastName: { type: String, minLength: 2, maxLength: 50 },
+      first_name: { type: String, required: true, minLength: 2, maxLength: 50 },
+      last_name: { type: String, required: true, minLength: 2, maxLength: 50 },
       biography: {
         type: String,
         maxLength: 500,

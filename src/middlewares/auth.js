@@ -11,7 +11,7 @@ export const authMiddleware = (req, res, next) => {
     const decoded = verifyToken(token);
     // Almacenar datos del usuario
 
-    req.user = decoded;
+    req.user = decoded; //por esto yo uso req.user
     next();
   } catch (error) {
     console.log(error);

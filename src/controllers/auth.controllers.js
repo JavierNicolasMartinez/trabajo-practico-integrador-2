@@ -5,41 +5,52 @@ import { generateToken } from "../helpers/jwt.helper.js";
 
 export const register = async (req, res) => {
   try {
-    const data = matchedData(req, { locations: ["body"] });
+    const data = matchedData(req, { locations: ["body"], nested: true });
     const hashedPassword = await hashPassword(data.password);
-    console.log("no llega hasta registrado");
+
     const user = await UserModel.create({
       username: data.username,
       email: data.email,
       password: hashedPassword,
       role: data.role,
-      profile: data.profile,
+      profile: {
+        first_name: data.profile.first_name,
+        last_name: data.profile.last_name,
+        biography: data?.profile?.biography || "",
+        avatarUrl: data?.profile?.avatarUrl || "",
+        birthDate: data?.profile?.birthDate || Date.now(),
+      },
     });
-    console.log("llega hasta registrado");
-    return res.status(201).json({ message: "Usuario registrado exitosamente" });
+    return res
+      .status(201)
+      .json({ ok: true, message: "Usuario registrado exitosamente", user });
   } catch (error) {
     console.log(error);
     return res
       .status(500)
-      .json({ message: "Error al registrar usuario", error });
+      .json({ ok: false, message: "Error al registrar usuario", error });
   }
 };
 
 export const login = async (req, res) => {
+  const { username, password } = req.body;
   try {
-    const { username, password } = req.body;
     const user = await UserModel.findOne({
-      where: { username },
+      username,
     });
     if (!user) {
-      return res.status(401).json({ message: "Credenciales invalidas" });
+      return res
+        .status(401)
+        .json({ ok: false, message: "Credenciales invalidas" });
     }
     const validPassword = await comparePassword(password, user.password);
     if (!validPassword) {
-      return res.status(401).json({ message: "Credenciales inválidas" });
+      return res
+        .status(401)
+        .json({ ok: false, message: "Credenciales inválidas" });
     }
     const token = generateToken({
-      id: user.id,
+      _id: user._id,
       name: user.profile.first_name,
       lastname: user.profile.last_name,
       role: user.role,
@@ -48,15 +59,46 @@ export const login = async (req, res) => {
       httpOnly: true,
       maxAge: 1000 * 60 * 60, // 1 hora
     });
-    return res.json({ message: "Login exitoso" });
+    return res.status(200).json({ ok: true, message: "Login exitoso" });
   } catch (error) {
-    res.status(500).json({
-      msg: "Error interno del servidor",
-    });
+    console.error(error);
+    res.status(500).json({ ok: false, message: "Error interno del servidor" });
   }
 };
 
-export const logout = (req, res) => {
-  res.clearCookie("token");
-  return res.json({ message: "Logout exitoso" });
+export const logout = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res.status(200).json({ ok: true, message: "Logout exitoso" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ ok: false, message: "Error interno del servidor" });
+  }
+};
+
+export const getProfileAuth = async (req, res) => {
+  try {
+    // req.user.id viene del token JWT decodificado en el middleware
+    const user = await UserModel.findById(req.user._id).select(
+      "profile username _id"
+    );
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ ok: false, message: "Usuario no encontrado" });
+    }
+
+    res.status(200).json({
+      ok: true,
+      message: "Perfil encontrado",
+      data: user.profile,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
 };

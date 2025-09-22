@@ -1,5 +1,10 @@
 import express from "express";
-import { login, logout, register } from "../controllers/auth.controllers.js";
+import {
+  getProfileAuth,
+  login,
+  logout,
+  register,
+} from "../controllers/auth.controllers.js";
 import { aplicarValidaciones } from "../middlewares/validator.js";
 import { dataValida } from "../middlewares/match.js";
 import { authMiddleware } from "../middlewares/auth.js";
@@ -15,7 +20,7 @@ routerAuth.post(
 );
 routerAuth.post("/auth/login", login);
 routerAuth.post("/auth/logout", logout);
-// routerAuth.get("/auth/profile", authMiddleware)
+routerAuth.get("/auth/profile", authMiddleware, getProfileAuth);
 
 // Desarrollar controladores de autenticación:
 // ● POST /api/auth/register: Registro de usuario con perfil embebido. (público)

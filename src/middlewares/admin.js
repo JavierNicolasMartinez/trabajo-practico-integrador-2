@@ -3,10 +3,11 @@ export const adminMiddleware = async (req, res, next) => {
     if (req.user.role !== "admin") {
       return res
         .status(403)
-        .json({ Message: "Solo un admin puede hacer esta acción" });
+        .json({ ok: false, Message: "Solo un admin puede hacer esta acción" });
     }
     next();
   } catch (error) {
-    res.status(500).json({ message: "Error interno del servidor" });
+    console.error(error);
+    res.status(500).json({ ok: false, message: "Error interno del servidor" });
   }
 };

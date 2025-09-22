@@ -7,28 +7,38 @@ export const createUserValidation = [
     .notEmpty()
     .withMessage("El campo de username no puede estar vacío")
     .isLength({ min: 3, max: 20 })
-    .custom(async (value) => {
-      const usernameUnico = await UserModel.findOne({
-        where: { username: value },
-      });
-      if (usernameUnico) {
-        throw new Error("El username ya existe");
+    .custom(async (username, { req }) => {
+      try {
+        const usernameUnico = await UserModel.findOne({
+          username: req.body.username,
+        });
+        if (usernameUnico) {
+          throw Promise.reject("El username ya existe");
+        }
+      } catch (error) {
+        console.error("Error interno", error);
+        return Promise.reject("Error al verificar el username");
       }
     }),
   body("email")
     .trim()
+    .notEmpty()
+    .withMessage("El campo de email no debe estar vacío")
     .isEmail()
     .withMessage("El email debe estar en formato de email")
     .isLength({ max: 100 })
     .withMessage("El email debe tener al un maximos de 100 caracteres ")
-    .notEmpty()
-    .withMessage("El campo de email no debe estar vacío")
-    .custom(async (value) => {
-      const emailUnico = await UserModel.findOne({
-        where: { email: value },
-      });
-      if (emailUnico) {
-        throw new Error("El email ya existe");
+    .custom(async (email, { req }) => {
+      try {
+        const emailUnico = await UserModel.findOne({
+          email: req.body.email,
+        });
+        if (emailUnico) {
+          return Promise.reject("El email ya existe");
+        }
+      } catch (error) {
+        console.error("Error interno", error);
+        return Promise.reject("Error al verificar el email");
       }
     }),
   body("password")
@@ -44,32 +54,31 @@ export const createUserValidation = [
     .matches(/[0-9]/)
     .withMessage("La contraseña debe tener al menos un número"),
   body("role")
+    .optional()
     .trim()
-    .notEmpty()
-    .withMessage("El campo de role no puede estar vacío")
     .isIn(["user", "admin"])
     .withMessage("El role debe ser 'user' o 'admin'"),
-  //   body("first_name")
-  //     .trim()
-  //     .notEmpty()
-  //     .withMessage("El campo de first_name no puede estar vacío")
-  //     .isLength({ min: 2, max: 50 })
-  //     .withMessage(
-  //       "El campo first_name no puede tener menos de 2 caracteres ni más de 50"
-  //     )
-  //     .isAlpha("es-ES", { ignore: " " })
-  //     .withMessage("En el campo de first_name solo pueden ir letras"), //Función buscada en documentación, fijarse por las dudas la especificación de idioma.
+  body("profile.first_name")
+    .trim()
+    .notEmpty()
+    .withMessage("El campo de first_name no puede estar vacío")
+    .isLength({ min: 2, max: 50 })
+    .withMessage(
+      "El campo first_name no puede tener menos de 2 caracteres ni más de 50"
+    )
+    .isAlpha("es-ES", { ignore: " " })
+    .withMessage("En el campo de first_name solo pueden ir letras"), //Función buscada en documentación, fijarse por las dudas la especificación de idioma.
 
-  //   body("last_name")
-  //     .trim()
-  //     .notEmpty()
-  //     .withMessage("El campo de last_name no puede estar vacío")
-  //     .isLength({ min: 2, max: 50 })
-  //     .withMessage(
-  //       "El campo last_name no puede tener menos de 2 caracteres ni más de 50"
-  //     )
-  //     .isAlpha("es-ES", { ignore: " " })
-  //     .withMessage("En el campo de last_name solo pueden ir letras"),
+  body("profile.last_name")
+    .trim()
+    .notEmpty()
+    .withMessage("El campo de last_name no puede estar vacío")
+    .isLength({ min: 2, max: 50 })
+    .withMessage(
+      "El campo last_name no puede tener menos de 2 caracteres ni más de 50"
+    )
+    .isAlpha("es-ES", { ignore: " " })
+    .withMessage("En el campo de last_name solo pueden ir letras"),
 
   //   body("biography")
   //     .trim()
