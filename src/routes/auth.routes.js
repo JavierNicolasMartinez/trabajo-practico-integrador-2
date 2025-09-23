@@ -4,11 +4,15 @@ import {
   login,
   logout,
   register,
+  updateAuthProfile,
 } from "../controllers/auth.controllers.js";
 import { aplicarValidaciones } from "../middlewares/validator.js";
 import { dataValida } from "../middlewares/match.js";
 import { authMiddleware } from "../middlewares/auth.js";
-import { createUserValidation } from "../middlewares/validations/auth.validation.js";
+import {
+  createUserValidation,
+  soloProfileValidation,
+} from "../middlewares/validations/auth.validation.js";
 
 export const routerAuth = express.Router();
 routerAuth.post(
@@ -21,7 +25,14 @@ routerAuth.post(
 routerAuth.post("/auth/login", login);
 routerAuth.post("/auth/logout", logout);
 routerAuth.get("/auth/profile", authMiddleware, getProfileAuth);
-
+routerAuth.put(
+  "/auth/profile",
+  authMiddleware,
+  soloProfileValidation,
+  aplicarValidaciones,
+  dataValida,
+  updateAuthProfile
+);
 // Desarrollar controladores de autenticación:
 // ● POST /api/auth/register: Registro de usuario con perfil embebido. (público)
 // ● POST /api/auth/login: Login con JWT enviado como cookie segura. (público)

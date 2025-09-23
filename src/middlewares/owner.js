@@ -1,6 +1,6 @@
 import { ArticleModel } from "../models/article.model.js";
 
-export const ownerMiddleware = async (req, res, next) => {
+export const ownerOrAdminMiddleware = async (req, res, next) => {
   try {
     const articulo = await ArticleModel.findByPk(req.params.id);
 

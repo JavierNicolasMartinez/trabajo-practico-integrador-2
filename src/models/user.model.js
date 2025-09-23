@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { ArticleModel } from "./article.model.js";
 
 const UserSchema = new Schema(
   {
@@ -6,7 +7,7 @@ const UserSchema = new Schema(
       type: String,
       required: true,
       trim: true,
-      lowercase: true,
+      lowercase: true, //convierte todo a minisculas.
       unique: true,
       minLength: 3,
       maxLength: 20,
@@ -59,11 +60,31 @@ const UserSchema = new Schema(
     versionKey: false,
   }
 );
+//Para la eliminar en cascada que no usamos porque es eliminación logica.
+// UserSchema.pre("findByIdAndUpdate", async function (next) {
+//   const user = await this.model.findOne(this.getFilter());
 
-export const UserModel = model("User", UserSchema);
+//   if (user) {
+//     await ArticleModel.deleteMany({ author: user._id });
+//   }
 
-// UserModel.pre(/^find/, function (next) {
-//   this.where({ deletedAt: { $eq: null } });
 //   next();
 // });
+
+//Para hacer los populates inversos: virtuals.
+UserSchema.virtual("Articles", {
+  ref: "Article",
+  localField: "_id",
+  foreignField: "author",
+  justOne: false,
+});
+
+UserSchema.set("toJSON", { virtuals: true });
+
+UserSchema.pre(/^find/, function (next) {
+  this.where({ deletedAt: { $eq: null } });
+  next();
+});
 //Esta función es para que siempre que use un metodo find solo lleve los que no están eliminados.
+
+export const UserModel = model("User", UserSchema);

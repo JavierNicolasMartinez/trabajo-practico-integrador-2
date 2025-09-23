@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { CommentModel } from "./comment.model.js";
 
 const ArticleSchema = new Schema(
   {
@@ -37,5 +38,24 @@ const ArticleSchema = new Schema(
     versionKey: false,
   }
 );
+//Eliminación en cascada
+ArticleSchema.pre("findByIdAndDelete", async function (next) {
+  const article = await this.model.findOne(this.getFilter());
 
+  if (article) {
+    await CommentModel.deleteMany({ article: article._id });
+  }
+
+  next();
+});
+
+//Populates inversos.
+ArticleSchema.virtual("comments", {
+  ref: "Comment",
+  localField: "_id",
+  foreignField: "article",
+  justOne: false,
+});
+
+ArticleSchema.set("toJSON", { virtuals: true });
 export const ArticleModel = model("Article", ArticleSchema);

@@ -8,6 +8,8 @@ export const register = async (req, res) => {
     const data = matchedData(req, { locations: ["body"], nested: true });
     const hashedPassword = await hashPassword(data.password);
 
+    console.log(data);
+
     const user = await UserModel.create({
       username: data.username,
       email: data.email,
@@ -78,7 +80,7 @@ export const logout = async (req, res) => {
 
 export const getProfileAuth = async (req, res) => {
   try {
-    // req.user.id viene del token JWT decodificado en el middleware
+    // req.user._id viene del token JWT decodificado en el middleware
     const user = await UserModel.findById(req.user._id).select(
       "profile username _id"
     );
@@ -94,6 +96,34 @@ export const getProfileAuth = async (req, res) => {
       message: "Perfil encontrado",
       data: user.profile,
     });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      ok: false,
+      msg: "Error interno del servidor",
+    });
+  }
+};
+
+export const updateAuthProfile = async (req, res) => {
+  try {
+    const data = matchedData(req, { locations: ["body"], nested: true });
+
+    const logueado = req.logeado;
+
+    const updatedProfile = await UserModel.findByIdAndUpdate(
+      logueado._id,
+      { $set: data },
+      { new: true }
+    );
+
+    if (updatedProfile) {
+      return res.status(200).json({
+        ok: true,
+        message: "Perfil actualizado",
+        profile: updatedProfile,
+      });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({

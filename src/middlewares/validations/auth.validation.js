@@ -80,15 +80,61 @@ export const createUserValidation = [
     .isAlpha("es-ES", { ignore: " " })
     .withMessage("En el campo de last_name solo pueden ir letras"),
 
-  //   body("biography")
-  //     .trim()
-  //     .notEmpty()
-  //     .withMessage("El campo de biography no puede estar vacío")
-  //     .isLength({ max: 500 })
-  //     .withMessage("La biography no puede superar los 500 caracteres."),
+  body("profile.biography")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("La biography no puede superar los 500 caracteres."),
 
-  //   body("avatar_url")
-  //     .optional()
-  //     .isURL()
-  //     .withMessage("El avatar debe ser un URL valido"),
+  body("avatar_url")
+    .optional()
+    .isURL()
+    .withMessage("El avatar debe ser un URL valido"),
+
+  body("profile.birthDate")
+    .optional()
+    .isDate()
+    .withMessage("El formato del cumpleaños debe ser en 'fecha'"),
+];
+
+export const soloProfileValidation = [
+  body("profile.first_name")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El campo de first_name no puede estar vacío")
+    .isLength({ min: 2, max: 50 })
+    .withMessage(
+      "El campo first_name no puede tener menos de 2 caracteres ni más de 50"
+    )
+    .isAlpha("es-ES", { ignore: " " })
+    .withMessage("En el campo de first_name solo pueden ir letras"), //Función buscada en documentación, fijarse por las dudas la especificación de idioma.
+
+  body("profile.last_name")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El campo de last_name no puede estar vacío")
+    .isLength({ min: 2, max: 50 })
+    .withMessage(
+      "El campo last_name no puede tener menos de 2 caracteres ni más de 50"
+    )
+    .isAlpha("es-ES", { ignore: " " })
+    .withMessage("En el campo de last_name solo pueden ir letras"),
+
+  body("profile.biography")
+    .optional()
+    .trim()
+    .isLength({ max: 500 })
+    .withMessage("La biography no puede superar los 500 caracteres."),
+
+  body("profile.avatar_url")
+    .optional()
+    .isURL()
+    .withMessage("El avatar debe ser un URL valido"),
+
+  body("profile.birthDate")
+    .optional()
+    .isDate()
+    .withMessage("El formato del cumpleaños debe ser en 'fecha'"),
 ];
