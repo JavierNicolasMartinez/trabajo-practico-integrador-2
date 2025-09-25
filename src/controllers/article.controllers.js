@@ -3,6 +3,7 @@ import { ArticleModel } from "../models/article.model.js";
 
 export const articleCreate = async (req, res) => {
   const { title, content, excerpt, status, author, tags } = req.body;
+  const logueado = req.logeado;
   try {
     const article = ArticleModel.create({
       title,

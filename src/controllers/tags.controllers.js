@@ -12,7 +12,7 @@ export const createTag = async (req, res) => {
     res.status(201).json({
       ok: true,
       message: "Etiqueta creada con exito",
-      data: tag,
+      tag,
     });
   } catch (error) {
     console.error(error);
@@ -25,7 +25,7 @@ export const createTag = async (req, res) => {
 
 export const getAllTags = async (_req, res) => {
   try {
-    const tags = await ArticleModel.find();
+    const tags = await TagModel.find();
 
     if (!tags) {
       return res.status(404).json({
@@ -49,7 +49,7 @@ export const getAllTags = async (_req, res) => {
 export const getByIdTag = async (req, res) => {
   const { id } = req.params;
   try {
-    const oneTag = await TagModel.findById(id).populate("Article");
+    const oneTag = await TagModel.findById(id);
 
     if (!oneTag) {
       return res.status(404).json({

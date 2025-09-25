@@ -2,7 +2,7 @@ import { UserModel } from "../models/user.model.js";
 
 export const getAllUser = async (_req, res) => {
   try {
-    const users = await UserModel.find().populate("Article");
+    const users = await UserModel.find();
 
     if (!users) {
       res.status(404).json({ ok: false, message: "Usuarios no encontrados" });
