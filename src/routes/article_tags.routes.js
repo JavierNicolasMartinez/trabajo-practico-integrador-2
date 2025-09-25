@@ -6,8 +6,8 @@ import {
 import { aplicarValidaciones } from "../middlewares/validator.js";
 import { authMiddleware } from "../middlewares/auth.js";
 import { adminMiddleware } from "../middlewares/admin.js";
-import { ownerOrAdminMiddleware } from "../middlewares/owner.js";
 import { dataValida } from "../middlewares/match.js";
+import { OwnerOrAdminCommentMiddleware } from "../middlewares/owner.js";
 
 export const routerArticleTags = express.Router();
 routerArticleTags.post(

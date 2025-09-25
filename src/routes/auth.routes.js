@@ -23,7 +23,7 @@ routerAuth.post(
   register
 );
 routerAuth.post("/auth/login", login);
-routerAuth.post("/auth/logout", logout);
+routerAuth.post("/auth/logout", authMiddleware, logout);
 routerAuth.get("/auth/profile", authMiddleware, getProfileAuth);
 routerAuth.put(
   "/auth/profile",

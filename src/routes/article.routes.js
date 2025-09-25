@@ -11,15 +11,52 @@ import { aplicarValidaciones } from "../middlewares/validator.js";
 import { dataValida } from "../middlewares/match.js";
 import { authMiddleware } from "../middlewares/auth.js";
 import { adminMiddleware } from "../middlewares/admin.js";
-import { ownerOrAdminMiddleware } from "../middlewares/owner.js";
+import {
+  ownerOrAdminArticleMiddleware,
+  OwnerOrAdminCommentMiddleware,
+} from "../middlewares/owner.js";
+import {
+  createArticleValidations,
+  idArticleValidation,
+} from "../middlewares/validations/article.validations.js";
 
 export const routerArticle = express.Router();
-routerArticle.post("/articles", articleCreate);
-routerArticle.get("/articles", getAllArticles);
-routerArticle.get("/articles/:id", getByIdArticle);
-routerArticle.get("/articles/my", getMyArticles);
-routerArticle.put("/articles/:id", updateMyArticle);
-routerArticle.delete("/articles/:id", deleteArticle);
+routerArticle.post(
+  "/articles",
+  authMiddleware,
+  createArticleValidations,
+  aplicarValidaciones,
+  dataValida,
+  articleCreate
+);
+routerArticle.get("/articles", authMiddleware, getAllArticles);
+routerArticle.get(
+  "/articles/:id",
+  authMiddleware,
+  idArticleValidation,
+  aplicarValidaciones,
+  dataValida,
+  getByIdArticle
+);
+routerArticle.get("/articles/my", authMiddleware, getMyArticles);
+routerArticle.put(
+  "/articles/:id",
+  authMiddleware,
+  ownerOrAdminArticleMiddleware,
+  idArticleValidation,
+  aplicarValidaciones,
+  dataValida,
+  updateMyArticle
+);
+routerArticle.delete(
+  "/articles/:id",
+  authMiddleware,
+  ownerOrAdminArticleMiddleware,
+  idArticleValidation,
+  aplicarValidaciones,
+  dataValida,
+  deleteArticle
+);
 
 // Articles:
 // ● POST /api/articles → Crear artículo. (usuario autenticado)
