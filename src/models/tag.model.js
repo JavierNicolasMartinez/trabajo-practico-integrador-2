@@ -21,6 +21,7 @@ export const TagSchema = new Schema(
     versionKey: false,
   }
 );
+
 //Esto hacemos para buscar la etiqueta que está a punto de ser eliminada y antes sacarla del articulo.
 //Artículos que tengan esa etiqueta e investigación del $pull que me elimina del array.
 TagSchema.pre("findOneAndDelete", async function (next) {
