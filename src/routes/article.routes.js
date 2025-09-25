@@ -17,7 +17,7 @@ export const routerArticle = express.Router();
 routerArticle.post("/articles", articleCreate);
 routerArticle.get("/articles", getAllArticles);
 routerArticle.get("/articles/:id", getByIdArticle);
-// routerArticle.get("/articles/my", getMyArticles);
+routerArticle.get("/articles/my", getMyArticles);
 routerArticle.put("/articles/:id", updateMyArticle);
 routerArticle.delete("/articles/:id", deleteArticle);
 

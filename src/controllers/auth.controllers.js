@@ -80,8 +80,9 @@ export const logout = async (req, res) => {
 
 export const getProfileAuth = async (req, res) => {
   try {
+    const logueado = req.logeado;
     // req.user._id viene del token JWT decodificado en el middleware
-    const user = await UserModel.findById(req.user._id).select(
+    const user = await UserModel.findById(logueado._id).select(
       "profile username _id"
     );
 

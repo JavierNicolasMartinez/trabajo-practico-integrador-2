@@ -1,5 +1,5 @@
 import { Schema, model } from "mongoose";
-import { ArticleModel } from "./article.model";
+import { ArticleModel } from "./article.model.js";
 
 export const TagSchema = new Schema(
   {
