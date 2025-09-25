@@ -13,7 +13,7 @@ export const createUserValidation = [
           username: req.body.username,
         });
         if (usernameUnico) {
-          throw Promise.reject("El username ya existe");
+          return Promise.reject("El username ya existe");
         }
       } catch (error) {
         console.error("Error interno", error);
@@ -86,7 +86,7 @@ export const createUserValidation = [
     .isLength({ max: 500 })
     .withMessage("La biography no puede superar los 500 caracteres."),
 
-  body("avatar_url")
+  body("profile.avatar_url")
     .optional()
     .isURL()
     .withMessage("El avatar debe ser un URL valido"),

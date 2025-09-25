@@ -11,12 +11,31 @@ import { authMiddleware } from "../middlewares/auth.js";
 import { dataValida } from "../middlewares/match.js";
 import { adminMiddleware } from "../middlewares/admin.js";
 import { ownerOrAdminMiddleware } from "../middlewares/owner.js";
+import {
+  createTagValidations,
+  tagidValidation,
+  updateTagValidations,
+} from "../middlewares/validations/tag.validations.js";
 
 export const routerTag = express.Router();
-routerTag.post("/tags", createTag);
-routerTag.get("/tags", getAllTags);
-routerTag.get("/tags/:id", getByIdTag);
-routerTag.put("/tags/:id", updateTag);
+routerTag.post(
+  "/tags",
+  authMiddleware,
+  adminMiddleware,
+  createTagValidations,
+  aplicarValidaciones,
+  createTag
+);
+routerTag.get("/tags", authMiddleware, getAllTags);
+routerTag.get("/tags/:id", authMiddleware, tagidValidation, getByIdTag);
+routerTag.put(
+  "/tags/:id",
+  adminMiddleware,
+  tagidValidation,
+  updateTagValidations,
+  aplicarValidaciones,
+  updateTag
+);
 routerTag.delete("/tags/:id", deleteTag);
 
 // Tags:
