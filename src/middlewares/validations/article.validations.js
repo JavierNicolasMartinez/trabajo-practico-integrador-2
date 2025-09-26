@@ -37,18 +37,6 @@ export const createArticleValidations = [
     .isIn(["published", "archived"])
     .withMessage("El estado debe ser 'published' o 'archived'"),
 
-  body("author")
-    .isMongoId()
-    .withMessage("El autor debe ser un ID válido")
-    .custom(async (author, { req }) => {
-      if (
-        author !== req.logeado._id.toString() ||
-        req.logeado.role !== "admin"
-      ) {
-        throw new Error("No puedes realizar esta función");
-      }
-      return true;
-    }),
   body("tags.*")
     .optional()
     .isMongoId()

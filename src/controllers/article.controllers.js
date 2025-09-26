@@ -2,17 +2,14 @@ import { matchedData } from "express-validator";
 import { ArticleModel } from "../models/article.model.js";
 
 export const articleCreate = async (req, res) => {
-  const { title, content, excerpt, status, author, tags } = req.body;
-  const logueado = req.logeado;
+  const data = matchedData(req, { locations: ["body"] });
+
+  data.author = req.logeado._id;
+
+  console.log(data);
+
   try {
-    const article = ArticleModel.create({
-      title,
-      content,
-      excerpt,
-      status,
-      author,
-      tags,
-    });
+    const article = await ArticleModel.create(data);
 
     return res.status(201).json({
       ok: true,
