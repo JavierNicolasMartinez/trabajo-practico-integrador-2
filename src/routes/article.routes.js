@@ -18,6 +18,7 @@ import {
 import {
   createArticleValidations,
   idArticleValidation,
+  updateValidationArticle,
 } from "../middlewares/validations/article.validations.js";
 
 export const routerArticle = express.Router();
@@ -29,21 +30,21 @@ routerArticle.post(
   dataValida,
   articleCreate
 );
+routerArticle.get("/articles/my", authMiddleware, getMyArticles);
 routerArticle.get("/articles", authMiddleware, getAllArticles);
 routerArticle.get(
   "/articles/:id",
   authMiddleware,
   idArticleValidation,
   aplicarValidaciones,
-  dataValida,
   getByIdArticle
 );
-routerArticle.get("/articles/my", authMiddleware, getMyArticles);
 routerArticle.put(
   "/articles/:id",
   authMiddleware,
   ownerOrAdminArticleMiddleware,
   idArticleValidation,
+  updateValidationArticle,
   aplicarValidaciones,
   dataValida,
   updateMyArticle
@@ -54,7 +55,6 @@ routerArticle.delete(
   ownerOrAdminArticleMiddleware,
   idArticleValidation,
   aplicarValidaciones,
-  dataValida,
   deleteArticle
 );
 

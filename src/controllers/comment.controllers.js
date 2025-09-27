@@ -2,13 +2,11 @@ import { ArticleModel } from "../models/article.model.js";
 import { CommentModel } from "../models/comment.model.js";
 
 export const createComment = async (req, res) => {
-  const { content, author, article } = req.body;
+  const data = req.data;
+
+  data.author = req.logeado._id;
   try {
-    const comment = await CommentModel.create({
-      content,
-      author,
-      article,
-    });
+    const comment = await CommentModel.create(data);
 
     return res.status(201).json({
       ok: true,
@@ -25,11 +23,11 @@ export const createComment = async (req, res) => {
 };
 
 export const getCommentsArticle = async (req, res) => {
-  const { id } = req.params;
+  const { articleId } = req.params;
   try {
-    const commentArt = await ArticleModel.findById(id)
-      .populate("Comment")
-      .populate("User");
+    const commentArt = await ArticleModel.findById(articleId)
+      .populate("Comments")
+      .populate("author");
 
     if (!commentArt) {
       return res.status(404).json({
@@ -79,12 +77,13 @@ export const getMyComments = async (req, res) => {
 
 export const updateComment = async (req, res) => {
   const { id } = req.params;
-  const { content } = req.body;
+  const data = req.data;
+
   try {
     const updatedComment = await CommentModel.findByIdAndUpdate(
       id,
       {
-        content,
+        $set: data,
       },
       { new: true }
     );
@@ -121,7 +120,7 @@ export const deleteComment = async (req, res) => {
       });
     }
 
-    return res.stutus(200).json({
+    return res.status(200).json({
       ok: true,
       message: "Comentario eliminado",
       deletedComment,

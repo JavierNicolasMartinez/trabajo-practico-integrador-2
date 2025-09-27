@@ -10,7 +10,10 @@ import { authMiddleware } from "../middlewares/auth.js";
 import { adminMiddleware } from "../middlewares/admin.js";
 import { dataValida } from "../middlewares/match.js";
 import { OwnerOrAdminCommentMiddleware } from "../middlewares/owner.js";
-import { idUserValidations } from "../middlewares/validations/user.validations.js";
+import {
+  idUserValidations,
+  updateUserValidations,
+} from "../middlewares/validations/user.validations.js";
 
 export const routerUser = express.Router();
 routerUser.get("/users", authMiddleware, adminMiddleware, getAllUser);
@@ -20,7 +23,6 @@ routerUser.get(
   adminMiddleware,
   idUserValidations,
   aplicarValidaciones,
-  dataValida,
   getByIdUser
 );
 routerUser.put(
@@ -28,6 +30,7 @@ routerUser.put(
   authMiddleware,
   adminMiddleware,
   idUserValidations,
+  updateUserValidations,
   aplicarValidaciones,
   dataValida,
   updateUser
@@ -38,7 +41,6 @@ routerUser.delete(
   adminMiddleware,
   idUserValidations,
   aplicarValidaciones,
-  dataValida,
   deleteUserAdmin
 );
 

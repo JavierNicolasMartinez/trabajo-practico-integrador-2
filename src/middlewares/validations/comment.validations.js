@@ -14,6 +14,20 @@ export const idCommentValidation = [
       return true;
     }),
 ];
+
+export const idArticleCommentValidation = [
+  param("articleId")
+    .isMongoId()
+    .withMessage("El id no es válido")
+    .custom(async (id) => {
+      const article = await ArticleModel.findById(id);
+      if (!article) {
+        throw new Error("El articulo no existe");
+      }
+      return true;
+    }),
+];
+
 export const createCommentValidations = [
   body("content")
     .trim()
@@ -21,7 +35,6 @@ export const createCommentValidations = [
     .withMessage("El campo de content es obligatorio")
     .isLength({ min: 5, max: 500 })
     .withMessage("El comentario debe tener entre 5 y 500 caracteres"),
-  body("author").isMongoId().withMessage("El autor debe ser un ID válido"),
   body("article")
     .isMongoId()
     .withMessage("El artículo debe ser un ID válido")
@@ -34,6 +47,26 @@ export const createCommentValidations = [
     }),
 ];
 
+export const updateCommentValidations = [
+  body("content")
+    .optional()
+    .trim()
+    .notEmpty()
+    .withMessage("El campo de content es obligatorio")
+    .isLength({ min: 5, max: 500 })
+    .withMessage("El comentario debe tener entre 5 y 500 caracteres"),
+  body("article")
+    .optional()
+    .isMongoId()
+    .withMessage("El artículo debe ser un ID válido")
+    .custom(async (id) => {
+      const article = await ArticleModel.findById(id);
+      if (!article) {
+        throw new Error("El article no existe");
+      }
+      return true;
+    }),
+];
 // Asegurarse de que todas las rutas tengan validaciones consistentes:
 // ● Validar ObjectIds recibidos tanto en el body como por params.
 // ● Validar campos obligatorios con express-validator y esquemas Mongoose.

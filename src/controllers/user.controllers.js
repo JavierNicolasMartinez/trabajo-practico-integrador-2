@@ -26,8 +26,8 @@ export const getByIdUser = async (req, res) => {
   const { id } = req.params;
   try {
     const user = await UserModel.findById(id)
-      .populate("Article")
-      .populate("Comment");
+      .populate("Articles")
+      .populate("Comments");
 
     if (!user) {
       return res.status(404).json({
@@ -51,11 +51,16 @@ export const getByIdUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const { id } = req.params;
-  const updateData = req.body;
+  const data = req.data;
+  console.log(data);
   try {
-    const updatedUser = await UserModel.findByIdAndUpdate(id, updateData, {
-      new: true,
-    });
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      id,
+      { $set: data },
+      {
+        new: true,
+      }
+    );
 
     if (!updatedUser) {
       return res.status(404).json({

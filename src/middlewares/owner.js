@@ -27,7 +27,7 @@ export const ownerOrAdminArticleMiddleware = async (req, res, next) => {
   const logueado = req.logeado;
   try {
     const articulo = await ArticleModel.findOne({ _id: req.params.id });
-
+    // console.log(articulo);
     if (logueado.role !== "admin" && articulo.author !== logueado._id) {
       return res.status(403).json({ ok: false, message: "No tiene permisos" });
     }

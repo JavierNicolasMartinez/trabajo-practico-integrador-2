@@ -48,7 +48,7 @@ export const createArticleValidations = [
 
   //   body("tags.*").isMongoId().withMessage("Cada etiqueta debe ser un ID válido"),
 ];
-export const updateValidationTag = [
+export const updateValidationArticle = [
   body("title")
     .optional()
     .notEmpty()

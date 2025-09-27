@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import { ArticleModel } from "./article.model.js";
 
 const UserSchema = new Schema(
   {
@@ -60,6 +59,7 @@ const UserSchema = new Schema(
     versionKey: false,
   }
 );
+
 //Para la eliminar en cascada que no usamos porque es eliminación logica.
 // UserSchema.pre("findByIdAndUpdate", async function (next) {
 //   const user = await this.model.findOne(this.getFilter());
@@ -74,6 +74,13 @@ const UserSchema = new Schema(
 //Para hacer los populates inversos: virtuals.
 UserSchema.virtual("Articles", {
   ref: "Article",
+  localField: "_id",
+  foreignField: "author",
+  justOne: false,
+});
+
+UserSchema.virtual("Comments", {
+  ref: "Comment",
   localField: "_id",
   foreignField: "author",
   justOne: false,

@@ -50,7 +50,7 @@ ArticleSchema.pre("findByIdAndDelete", async function (next) {
 });
 
 //Populates inversos.
-ArticleSchema.virtual("comments", {
+ArticleSchema.virtual("Comments", {
   ref: "Comment",
   localField: "_id",
   foreignField: "article",

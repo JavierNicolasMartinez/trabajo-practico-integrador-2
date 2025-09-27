@@ -27,7 +27,9 @@ export const articleCreate = async (req, res) => {
 
 export const getAllArticles = async (_req, res) => {
   try {
-    const articles = await ArticleModel.find();
+    const articles = await ArticleModel.find()
+      .populate("author")
+      .populate("tags");
     if (!articles) {
       return res.status(404).json({
         ok: false,
@@ -36,7 +38,7 @@ export const getAllArticles = async (_req, res) => {
     }
     res.status(200).json({
       ok: true,
-      message: "Usuarios encontrados",
+      message: "Articulos encontrados",
       articles,
     });
   } catch (error) {
@@ -51,7 +53,9 @@ export const getAllArticles = async (_req, res) => {
 export const getByIdArticle = async (req, res) => {
   const { id } = req.params;
   try {
-    const article = await ArticleModel.findById(id);
+    const article = await ArticleModel.findById(id)
+      .populate("author")
+      .populate("tags");
     if (!article) {
       return res.status(404).json({
         ok: false,
@@ -74,7 +78,6 @@ export const getByIdArticle = async (req, res) => {
 
 export const getMyArticles = async (req, res) => {
   try {
-    // const data = matchedData(req, {locations: ["body"]});
     const logueado = req.logeado;
 
     const myArticles = await ArticleModel.find({ author: logueado._id });
@@ -87,7 +90,7 @@ export const getMyArticles = async (req, res) => {
     return res.status(200).json({
       ok: true,
       message: "Tus articulos",
-      myArticles,
+      articles: myArticles,
     });
   } catch (error) {
     console.error(error);
@@ -100,16 +103,13 @@ export const getMyArticles = async (req, res) => {
 
 export const updateMyArticle = async (req, res) => {
   const { id } = req.params;
-  const { title, content, excerpt, status, tags } = req.body;
+  const data = matchedData(req, { locations: ["body"] });
+
   try {
     const updatedArticle = await ArticleModel.findByIdAndUpdate(
       id,
       {
-        title,
-        content,
-        excerpt,
-        status,
-        tags,
+        $set: data,
       },
       { new: true }
     );

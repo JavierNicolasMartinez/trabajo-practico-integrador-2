@@ -12,32 +12,21 @@ import { adminMiddleware } from "../middlewares/admin.js";
 import { dataValida } from "../middlewares/match.js";
 import {
   createCommentValidations,
+  idArticleCommentValidation,
   idCommentValidation,
+  updateCommentValidations,
 } from "../middlewares/validations/comment.validations.js";
 import { OwnerOrAdminCommentMiddleware } from "../middlewares/owner.js";
+import { idArticleValidation } from "../middlewares/validations/article.validations.js";
 
 export const routerComment = express.Router();
-routerComment.post(
-  "/comments",
-  authMiddleware,
-  createCommentValidations,
-  aplicarValidaciones,
-  createComment
-);
+routerComment.get("/comments/my", authMiddleware, getMyComments);
 routerComment.get(
   "/comments/article/:articleId",
   authMiddleware,
-  getCommentsArticle
-);
-routerComment.get("/comments/my", authMiddleware, getMyComments);
-routerComment.put(
-  "/comments/:id",
-  authMiddleware,
-  OwnerOrAdminCommentMiddleware,
-  idCommentValidation,
+  idArticleCommentValidation,
   aplicarValidaciones,
-  dataValida,
-  updateComment
+  getCommentsArticle
 );
 routerComment.delete(
   "/comments/:id",
@@ -45,8 +34,25 @@ routerComment.delete(
   OwnerOrAdminCommentMiddleware,
   idCommentValidation,
   aplicarValidaciones,
-  dataValida,
   deleteComment
+);
+routerComment.post(
+  "/comments",
+  authMiddleware,
+  createCommentValidations,
+  aplicarValidaciones,
+  dataValida,
+  createComment
+);
+routerComment.put(
+  "/comments/:id",
+  authMiddleware,
+  OwnerOrAdminCommentMiddleware,
+  idCommentValidation,
+  updateCommentValidations,
+  aplicarValidaciones,
+  dataValida,
+  updateComment
 );
 // Comments:
 // ● POST /api/comments → Crear comentario en artículo. (usuario autenticado)

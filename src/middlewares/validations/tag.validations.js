@@ -13,7 +13,18 @@ export const tagidValidation = [
       return true;
     }),
 ];
-
+export const idTagValidation = [
+  param("tagId")
+    .isMongoId()
+    .withMessage("El id no es válido")
+    .custom(async (id) => {
+      const tag1 = await TagModel.findById(id);
+      if (!tag1) {
+        throw new Error("La etiqueta no existe");
+      }
+      return true;
+    }),
+];
 export const createTagValidations = [
   body("name")
     .trim()

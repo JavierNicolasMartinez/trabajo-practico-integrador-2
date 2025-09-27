@@ -12,27 +12,29 @@ import {
   OwnerOrAdminCommentMiddleware,
 } from "../middlewares/owner.js";
 import { idArticleValidation } from "../middlewares/validations/article.validations.js";
-import { tagidValidation } from "../middlewares/validations/tag.validations.js";
+import {
+  idTagValidation,
+  tagidValidation,
+} from "../middlewares/validations/tag.validations.js";
+import { idArticleCommentValidation } from "../middlewares/validations/comment.validations.js";
 
 export const routerArticleTags = express.Router();
 routerArticleTags.post(
   "/articles/:articleId/tags/:tagId",
   authMiddleware,
   ownerOrAdminArticleMiddleware,
-  idArticleValidation,
-  tagidValidation,
+  idArticleCommentValidation,
+  idTagValidation,
   aplicarValidaciones,
-  dataValida,
   agregarEtiquetaArticulo
 );
 routerArticleTags.delete(
   "/articles/:articleId/tags/:tagId",
   authMiddleware,
   ownerOrAdminArticleMiddleware,
-  idArticleValidation,
-  tagidValidation,
+  idArticleCommentValidation,
+  idTagValidation,
   aplicarValidaciones,
-  dataValida,
   removerTagArticle
 );
 

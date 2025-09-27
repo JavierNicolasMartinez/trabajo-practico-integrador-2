@@ -38,7 +38,7 @@ TagSchema.pre("findOneAndDelete", async function (next) {
 });
 
 //populates inversos
-TagSchema.virtual("articles", {
+TagSchema.virtual("Articles", {
   ref: "Article",
   localField: "_id",
   foreignField: "tags",

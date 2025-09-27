@@ -33,7 +33,6 @@ routerTag.get(
   authMiddleware,
   tagidValidation,
   aplicarValidaciones,
-  dataValida,
   getByIdTag
 );
 routerTag.put(
@@ -52,7 +51,6 @@ routerTag.delete(
   adminMiddleware,
   tagidValidation,
   aplicarValidaciones,
-  dataValida,
   deleteTag
 );
 

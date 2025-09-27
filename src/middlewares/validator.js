@@ -5,5 +5,6 @@ export const aplicarValidaciones = (req, res, next) => {
 
   if (!errores.isEmpty())
     return res.status(400).json({ error: errores.array() });
+
   next();
 };

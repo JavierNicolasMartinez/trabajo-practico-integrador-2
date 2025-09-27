@@ -6,10 +6,12 @@ export const idUserValidations = [
     .isMongoId()
     .withMessage("El id debe no es válido")
     .custom(async (id) => {
-      const user = await UserModel.findOne({ id, deleted_at: null });
+      const user = await UserModel.findOne({ _id: id });
+
       if (!user) {
         throw new Error("El usuario no existe");
       }
+
       return true;
     }),
 ];
@@ -42,8 +44,8 @@ export const updateUserValidations = [
     .withMessage("Debe ser un email válido")
     .custom(async (email, { req }) => {
       const emailExiste = await UserModel.findOne({
-        email,
-        _id: { $ne: req.params._id },
+        email: email,
+        _id: { $ne: req.params.id },
       });
       if (emailExiste) {
         throw new Error("El email ya está en uso");
