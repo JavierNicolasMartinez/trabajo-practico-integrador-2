@@ -11,7 +11,7 @@ export const authMiddleware = (req, res, next) => {
     const decoded = verifyToken(token);
     // Almacenar datos del usuario
 
-    req.logeado = decoded; //por esto yo uso req.user
+    req.logeado = decoded;
     next();
   } catch (error) {
     console.log(error);

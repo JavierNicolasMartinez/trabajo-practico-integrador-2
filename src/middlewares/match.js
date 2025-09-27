@@ -3,7 +3,7 @@ import { matchedData } from "express-validator";
 export const dataValida = async (req, res, next) => {
   try {
     const data = matchedData(req, { locations: ["body"] });
-    console.log(data);
+    // console.log(data);
     if (Object.keys(data).length === 0) {
       return res
         .status(404)

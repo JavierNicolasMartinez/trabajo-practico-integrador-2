@@ -109,7 +109,7 @@ export const getProfileAuth = async (req, res) => {
 export const updateAuthProfile = async (req, res) => {
   try {
     const data = matchedData(req, { locations: ["body"], nested: true });
-
+    //No sirve porque ya agregue mi match
     const logueado = req.logeado;
 
     const updatedProfile = await UserModel.findByIdAndUpdate(
